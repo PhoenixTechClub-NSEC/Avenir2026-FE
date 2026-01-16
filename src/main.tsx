@@ -4,7 +4,8 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 
 import App from "./App.tsx";
-import Team from "./components/Team.tsx";
+// @ts-ignore
+import Team from "./components/Team.jsx";
 import EventPage from "./components/EventPage.tsx";
 
 createRoot(document.getElementById("root")!).render(
