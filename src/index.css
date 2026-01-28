@@ -4,6 +4,33 @@
 
 /* Custom base styles */
 body {
-  background-color: #111827; /* gray-900 */
+  background-color: #0B0B0B;
   color: white;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* 
+  'PRICEDOWN BL' is the main heading font for the GTA vibe.
+*/
+@font-face {
+  font-family: 'Pricedown BL';
+  src: local('Pricedown BL'), local('Pricedown');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Refined Avenir heading style - Compact, Gradient, Softer Shadows */
+.avenir-refined-heading {
+  background: linear-gradient(to bottom, #D4AF37 0%, #FF8C42 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.8));
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: inline-block;
+  cursor: default;
+}
+
+.avenir-refined-heading:hover {
+  transform: scale(1.05);
 }

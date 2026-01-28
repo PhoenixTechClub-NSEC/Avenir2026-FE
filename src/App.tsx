@@ -8,7 +8,9 @@ import Navbar from "./components/Navbar";
 import TimeLine from "./components/TimeLine";
 // import Loader from "./components/Loader";
 // import AnimatedBackground from "./components/AnimatedBackground";
+// @ts-ignore
 import FAQ from "./components/FAQ";
+// @ts-ignore
 import Footer from "./components/Footer";
 import Events from "./components/Events";
 

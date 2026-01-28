@@ -1,89 +1,104 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import teamBg from '../assets/team_bg.jpg';
-
-const TEAM_DATA = {
-    core: [
-        { id: 1, name: 'Core Member 1', role: 'President', image: '', instagram: '#', linkedin: '#' },
-        { id: 2, name: 'Core Member 2', role: 'Vice President', image: '', instagram: '#', linkedin: '#' },
-        { id: 3, name: 'Core Member 3', role: 'Secretary', image: '', instagram: '#', linkedin: '#' },
-    ],
-    wings: [
-        { id: 1, name: 'Wing Lead 1', role: 'Tech Lead', image: '', instagram: '#', linkedin: '#' },
-        { id: 2, name: 'Wing Lead 2', role: 'Design Lead', image: '', instagram: '#', linkedin: '#' },
-        { id: 3, name: 'Wing Lead 3', role: 'Marketing Lead', image: '', instagram: '#', linkedin: '#' },
-    ],
-    dev: [
-        { id: 1, name: 'Dev Member 1', role: 'Developer', image: '', instagram: '#', linkedin: '#' },
-        { id: 2, name: 'Dev Member 2', role: 'Developer', image: '', instagram: '#', linkedin: '#' },
-        { id: 3, name: 'Dev Member 3', role: 'Developer', image: '', instagram: '#', linkedin: '#' },
-    ],
-};
+import { useNavigate } from 'react-router-dom';
+import { TEAM_DATA } from '../constants/team';
+import { motion } from 'framer-motion';
 
 const TeamCard = ({ member }) => (
-    <div
-        className="group relative backdrop-blur-xl p-6 rounded-2xl border flex flex-col items-center hover:scale-105 hover:-skew-x-1 transition-all duration-300 transform hover:-translate-y-2 overflow-hidden shadow-lg"
-        style={{
-            backgroundColor: 'rgba(11, 11, 11, 0.4)',
-            borderColor: 'rgba(212, 175, 55, 0.2)'
-        }}
-    >
-        {/* Glitch Overlay on Hover (Palette Tint) */}
-        <div
-            className="absolute inset-0 opacity-0 group-hover:opacity-20 pointer-events-none transition-opacity duration-300"
-            style={{ background: 'linear-gradient(to top right, #D4AF37, #FF8C42)' }}
-        ></div>
+    <div className="group relative p-[2px] overflow-hidden rounded-2xl transition-all duration-300 hover:scale-105 transform hover:-translate-y-2 shadow-lg">
+        {/* Snake Animation Layer */}
+        <motion.div
+            animate={{
+                rotate: [0, 360],
+            }}
+            transition={{
+                duration: 20,
+                repeat: Infinity,
+                ease: "linear",
+            }}
+            className="absolute inset-[-150%] bg-[conic-gradient(from_0deg,transparent_0%,rgba(255,215,0,0.2)_5%,transparent_10%,rgba(255,215,0,0.2)_50%,transparent_55%,rgba(255,215,0,0.2)_90%,transparent_100%)] opacity-15 group-hover:opacity-40 transition-opacity duration-700"
+        />
 
         <div
-            className="w-28 h-28 rounded-full mb-5 p-1 group-hover:animate-spin-slow"
-            style={{ background: 'linear-gradient(to top right, #D4AF37, #FF8C42, #2B0F3F)' }}
+            className="relative z-10 backdrop-blur-xl p-6 rounded-2xl border flex flex-col items-center bg-black/40 h-full transition-all duration-300"
+            style={{ borderColor: 'rgba(212, 175, 55, 0.2)' }}
         >
-            <div className="w-full h-full rounded-full flex items-center justify-center overflow-hidden border-2" style={{ backgroundColor: '#0B0B0B', borderColor: 'rgba(212, 175, 55, 0.2)' }}>
-                {member.image ? (
-                    <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
-                ) : (
-                    <span className="text-3xl font-bold" style={{ color: '#D4AF37' }}>?</span>
-                )}
+            {/* Glitch Overlay */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-20 pointer-events-none transition-opacity duration-300" />
+
+            {/* Avatar */}
+            <div
+                className="relative w-28 h-28 rounded-full mb-5 p-1"
+                style={{ background: 'linear-gradient(to top right, #D4AF37, #FF8C42, #2B0F3F)' }}
+            >
+                <div className="w-full h-full rounded-full overflow-hidden flex items-center justify-center bg-black">
+                    {member.image ? (
+                        <img
+                            src={member.image}
+                            alt={member.name}
+                            className="w-full h-full object-cover"
+                        />
+                    ) : (
+                        <span className="text-3xl font-bold text-[#D4AF37]">?</span>
+                    )}
+                </div>
             </div>
+
+            <h3 className="text-xl font-black text-white tracking-wider mb-1 group-hover:text-[#D4AF37] transition-colors uppercase">
+                {member.name}
+            </h3>
+
+            <p
+                className="text-sm font-bold tracking-widest uppercase mb-6 transition-colors"
+                style={{ color: '#FF8C42' }}
+            >
+                {member.role}
+            </p>
+
+            <div className="flex gap-5 z-10 relative">
+                <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={member.instagram}
+                    className="text-2xl text-gray-400 hover:text-[#FF8C42] transition-transform hover:scale-110 font-semibold uppercase tracking-widest"
+                >
+                    <i className="fa-brands fa-instagram"></i>
+                </a>
+                <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={member.linkedin}
+                    className="text-2xl text-gray-400 hover:text-[#D4AF37] transition-transform hover:scale-110 font-semibold uppercase tracking-widest"
+                >
+                    <i className="fa-brands fa-linkedin"></i>
+                </a>
+            </div>
+
+            <style>{`
+        .group:hover .relative.z-10 {
+          border-color: rgba(255, 140, 66, 0.3) !important;
+        }
+      `}</style>
         </div>
-
-        <h3 className="text-xl font-black text-white tracking-wider mb-1 group-hover:text-[#D4AF37] transition-colors uppercase font-sans drop-shadow-sm shadow-black">
-            {member.name}
-        </h3>
-
-        <p className="text-sm font-bold tracking-widest uppercase mb-6 group-hover:text-white transition-colors drop-shadow-sm" style={{ color: '#FF8C42' }}>
-            {member.role}
-        </p>
-
-        <div className="flex gap-5 z-10 relative">
-            <a href={member.instagram} className="text-gray-400 hover:text-[#FF8C42] transition-colors transform hover:scale-110 font-semibold text-xs uppercase tracking-widest">
-                Instagram
-            </a>
-            <a href={member.linkedin} className="text-gray-400 hover:text-[#D4AF37] transition-colors transform hover:scale-110 font-semibold text-xs uppercase tracking-widest">
-                LinkedIn
-            </a>
-        </div>
-
-        <style>{`
-            .group:hover {
-                border-color: rgba(255, 140, 66, 0.6) !important;
-                box-shadow: 5px 5px 0px rgba(212, 175, 55, 0.4), -5px -5px 0px rgba(255, 140, 66, 0.4);
-            }
-        `}</style>
     </div>
 );
 
 const TabButton = ({ active, onClick, children }) => (
     <button
         onClick={onClick}
-        className={`px-8 py-3 rounded-full font-bold uppercase tracking-wider text-xs transition-all duration-300 border-2 transform hover:skew-x-6 hover:scale-110 ${active
-            ? 'text-white border-transparent'
-            : 'bg-black/50 border-[#2B0F3F] text-gray-400 hover:border-[#D4AF37] hover:text-[#D4AF37]'
-            }`}
+        className={`
+      cursor-pointer px-7 py-3 rounded-full font-bold uppercase 
+      tracking-wider text-xs transition-all duration-300 
+      border-2 transform hover:skew-x-5 hover:scale-110
+      ${active
+                ? 'text-white border-transparent scale-105 hover:scale-105 hover:skew-x-5 shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_25px_rgba(212,175,55,0.5)]'
+                : 'bg-black/50 border-[#2B0F3F] text-gray-400 hover:border-[#D4AF37] hover:text-[#D4AF37]'
+            }
+    `}
         style={active ? {
             background: 'linear-gradient(to right, #2B0F3F, #FF8C42)',
-            boxShadow: '0 0 20px rgba(212, 175, 55, 0.3)',
-            transform: 'scale(1.05) skewX(0deg)'
+            WebkitBackgroundClip: 'text, padding-box',
+            backgroundClip: 'padding-box',
         } : {}}
     >
         {children}
@@ -91,6 +106,7 @@ const TabButton = ({ active, onClick, children }) => (
 );
 
 const Team = () => {
+    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('core');
 
     return (
@@ -100,20 +116,10 @@ const Team = () => {
                 backgroundImage: `linear-gradient(rgba(11, 11, 11, 0.7), rgba(43, 15, 63, 0.85)), url(${teamBg})`
             }}
         >
-            <style>{`
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        .group:hover .group-hover\\:animate-spin-slow {
-          animation: spin-slow 8s linear infinite;
-        }
-      `}</style>
-
             {/* Back to Home Button */}
-            <Link
-                to="/"
-                className="absolute top-6 left-6 px-6 py-2 backdrop-blur-md border font-bold rounded-full transition-all duration-300 z-10 flex items-center gap-2 group hover:-skew-x-6 text-sm uppercase tracking-widest hover:text-white"
+            <div
+                onClick={() => { navigate('/') }}
+                className="cursor-pointer absolute top-6 left-6 px-6 py-2 backdrop-blur-md border font-bold rounded-full transition-all duration-300 z-10 flex items-center gap-2 group hover:-skew-x-6 text-sm uppercase tracking-widest hover:text-white"
                 style={{
                     backgroundColor: 'rgba(11, 11, 11, 0.4)',
                     borderColor: '#D4AF37',
@@ -121,19 +127,28 @@ const Team = () => {
                 }}
             >
                 <span className="group-hover:-translate-x-1 transition-transform duration-300">←</span> Back to Home
-            </Link>
+            </div>
 
             <div className="container mx-auto">
                 {/* Main Heading: Impact font preserved, Palette Gradient */}
-                <h1
-                    className="text-6xl md:text-7xl font-extrabold mb-16 text-center text-transparent bg-clip-text drop-shadow-[0_4px_8px_rgba(0,0,0,0.9)] tracking-tighter uppercase font-[Impact,sans-serif] hover:scale-105 transition-transform duration-500 cursor-default"
-                    style={{ backgroundImage: 'linear-gradient(to bottom, #D4AF37, #FF8C42)' }}
+                <motion.h2
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    whileHover={{ rotateY: 10 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    className="hover:scale-105 cursor-pointer tracking-wider text-6xl md:text-7xl font-extrabold mb-16 text-center bg-clip-text drop-shadow-[0_4px_8px_rgba(0,0,0,0.9)] uppercase font-[Impact,sans-serif] transition-transform duration-500 text-orange-500"
+                    style={{
+                        textShadow: `2.5px 2.5px 0px #000, 4px 4px 0px rgba(250, 204, 21, 1.8)`,
+                        transformStyle: "preserve-3d",
+                        perspective: 800,
+                        backgroundImage: 'linear-gradient(to bottom, #D4AF37, #FF8C42)'
+                    }}
                 >
                     Meet Our Team
-                </h1>
+                </motion.h2>
 
                 {/* Tab Navigation */}
-                <div className="flex flex-wrap justify-center gap-6 mb-20">
+                <div className="cursor-pointer flex flex-wrap justify-center gap-6 mb-20">
                     <TabButton
                         active={activeTab === 'core'}
                         onClick={() => setActiveTab('core')}
@@ -155,12 +170,11 @@ const Team = () => {
                 </div>
 
                 {/* Active Section Content */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div className="cursor-pointer grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
                     {TEAM_DATA[activeTab].map((member) => (
                         <TeamCard key={member.id} member={member} />
                     ))}
                 </div>
-
             </div>
         </div>
     );

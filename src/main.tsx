@@ -5,7 +5,7 @@ import "./index.css";
 
 import App from "./App.tsx";
 // @ts-ignore
-import Team from "./components/Team.jsx";
+import Team from "./components/Team";
 import EventPage from "./components/EventPage.tsx";
 
 createRoot(document.getElementById("root")!).render(
