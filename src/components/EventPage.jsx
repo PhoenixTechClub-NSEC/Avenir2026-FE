@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 // import { EVENT_DATA } from "../constants/Event_Data";
 import { useNavigate } from "react-router";
 import bg from '../assets/Hero.jpeg';
@@ -27,6 +29,8 @@ export default function EventPage() {
   const [promoStatus, setPromoStatus] = useState(null); // null, 'loading', 'valid', 'invalid'
   const [promoDetails, setPromoDetails] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [lastSubmissionData, setLastSubmissionData] = useState(null);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -119,6 +123,93 @@ export default function EventPage() {
     debouncedValidate(code);
   };
 
+  const generateReceipt = (data) => {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+
+    // Helper to add images safely
+    const addImageQuietly = (url, x, y, w, h) => {
+      try {
+        doc.addImage(url, 'PNG', x, y, w, h);
+      } catch (e) {
+        console.error("Failed to add image to PDF", e);
+      }
+    };
+
+    // Header Color
+    doc.setFillColor(255, 140, 0); // Orange
+    doc.rect(0, 0, pageWidth, 40, 'F');
+
+    // Logos
+    // Assuming relative paths work or we use base64/absolute if served.
+    // In dev, relative to public works if served.
+    addImageQuietly('/logo.png', 10, 5, 30, 30);
+    addImageQuietly('/phoenix.jpeg', pageWidth - 40, 5, 30, 30);
+
+    // Title
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.setFont("helvetica", "bold");
+    doc.text("AVENIR 2026", pageWidth / 2, 20, { align: "center" });
+    doc.setFontSize(12);
+    doc.text("OFFICIAL REGISTRATION RECEIPT", pageWidth / 2, 30, { align: "center" });
+
+    // Reset Text Color
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(10);
+    doc.text(`Generated on: ${new Date().toLocaleString()}`, 10, 50);
+    doc.text(`Submission ID: ${data.submissionId}`, pageWidth - 10, 50, { align: "right" });
+
+    // Event Info
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("EVENT INFORMATION", 10, 65);
+    doc.setLineWidth(0.5);
+    doc.line(10, 67, 70, 67);
+
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Event Name: ${selectedEvent.name}`, 15, 75);
+    doc.text(`Event ID: ${selectedEvent.eventId}`, 15, 82);
+    doc.text(`College: ${data.collegeName}`, 15, 89);
+    doc.text(`Promo Code Used: ${promoCode}`, 15, 96);
+
+    // Submission Details Table
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("PARTICIPANT DETAILS", 10, 110);
+    doc.line(10, 112, 70, 112);
+
+    const tableRows = [];
+    selectedEvent.fields.forEach(field => {
+      let val = formData[field.id];
+      if (field.type === 'image' && val) {
+        val = `[Image File: ${val.name}]`;
+      }
+      tableRows.push([field.label, val || 'N/A']);
+    });
+
+    autoTable(doc, {
+      startY: 118,
+      head: [['Field', 'Value']],
+      body: tableRows,
+      theme: 'grid',
+      headStyles: { fillColor: [255, 140, 0] },
+      styles: { fontSize: 10, cellPadding: 5 }
+    });
+
+    // Footer
+    const finalY = (doc).lastAutoTable.finalY || 150;
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "italic");
+    doc.setTextColor(100, 100, 100);
+    doc.text("This is an automatically generated receipt. Valid for event entry.", pageWidth / 2, finalY + 20, { align: "center" });
+    doc.text("For help, contact your Campus Ambassador.", pageWidth / 2, finalY + 26, { align: "center" });
+
+    // Save
+    doc.save(`Avenir_Receipt_${data.submissionId}.pdf`);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (promoStatus !== 'valid') {
@@ -136,18 +227,17 @@ export default function EventPage() {
     });
 
     try {
-      // Assuming the public submission endpoint is /api/submissions/:eventId
-      // If it requires a different endpoint for public (e.g. /api/public/submissions), update accordingly.
-      // Based on typical REST patterns and the provided context.
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/submissions/${selectedEvent.eventId}`, {
         method: 'POST',
         body: data
       });
 
       const result = await response.json();
-      if (response.ok) {
-        alert("Registration Successful!");
-        closeModal();
+      if (response.ok && result.success) {
+        setLastSubmissionData(result);
+        setShowSuccess(true);
+        // Automatically download receipt
+        generateReceipt(result);
       } else {
         alert(`Registration Failed: ${result.error || "Unknown error"}`);
       }
@@ -514,6 +604,7 @@ export default function EventPage() {
                             </label>
                             <FieldInput
                               field={field}
+                              value={formData[field.id]}
                               onChange={handleInputChange}
                               onFileChange={handleFileChange}
                             />
@@ -538,10 +629,69 @@ export default function EventPage() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* Success Overlay */}
+          <AnimatePresence>
+            {showSuccess && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl"
+              >
+                <motion.div
+                  initial={{ scale: 0.8, y: 20 }}
+                  animate={{ scale: 1, y: 0 }}
+                  className="bg-gray-900 border-2 border-green-500/50 rounded-3xl p-8 max-w-md w-full text-center shadow-[0_0_100px_rgba(34,197,94,0.3)]"
+                >
+                  <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(34,197,94,0.5)]">
+                    <span className="text-4xl text-black font-bold">✔</span>
+                  </div>
+
+                  <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">
+                    Success!
+                  </h2>
+                  <p className="text-gray-400 mb-8">
+                    Your registration for <span className="text-orange-400 font-bold">{selectedEvent.name}</span> has been confirmed.
+                  </p>
+
+                  <div className="bg-black/50 rounded-2xl p-4 mb-8 border border-gray-800 text-left space-y-2">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-gray-500">SUBMISSION ID</span>
+                      <span className="text-green-400 font-mono">{lastSubmissionData?.submissionId}</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span className="text-gray-500">COLLEGE</span>
+                      <span className="text-white uppercase font-bold">{lastSubmissionData?.collegeName}</span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-4">
+                    <button
+                      onClick={() => generateReceipt(lastSubmissionData)}
+                      className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-black font-black uppercase tracking-widest rounded-xl hover:shadow-[0_0_30px_rgba(34,197,94,0.4)] transition-all transform hover:-translate-y-1"
+                    >
+                      <i className="fas fa-download mr-2"></i>
+                      Download Receipt
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowSuccess(false);
+                        closeModal();
+                      }}
+                      className="w-full py-3 text-gray-500 hover:text-white transition-colors uppercase text-xs font-bold tracking-widest"
+                    >
+                      Back to Events
+                    </button>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Add shimmer animation */}
-        <style jsx>{`
+        <style>{`
         @keyframes shimmer {
           0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
           100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
@@ -552,13 +702,14 @@ export default function EventPage() {
   );
 }
 
-function FieldInput({ field, onChange, onFileChange }) {
+function FieldInput({ field, value, onChange, onFileChange }) {
   const commonClasses = "w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500 transition-colors";
 
   if (field.type === 'textarea') {
     return (
       <textarea
         required={field.mandatory}
+        value={value || ''}
         className={commonClasses}
         rows={3}
         onChange={(e) => onChange(field.id, e.target.value)}
@@ -571,6 +722,7 @@ function FieldInput({ field, onChange, onFileChange }) {
     return (
       <select
         required={field.mandatory}
+        value={value || ''}
         className={commonClasses}
         onChange={(e) => onChange(field.id, e.target.value)}
       >
@@ -583,8 +735,10 @@ function FieldInput({ field, onChange, onFileChange }) {
   }
 
   if (field.type === 'image') {
+    const file = value;
     return (
-      <div className="border-2 border-dashed border-gray-700 rounded-lg p-4 text-center hover:border-orange-500 transition-colors cursor-pointer relative">
+      <div className={`border-2 border-dashed rounded-lg p-6 text-center transition-all cursor-pointer relative
+        ${file ? 'border-green-500 bg-green-500/5' : 'border-gray-700 hover:border-orange-500 bg-black/20'}`}>
         <input
           type="file"
           required={field.mandatory}
@@ -596,9 +750,27 @@ function FieldInput({ field, onChange, onFileChange }) {
             }
           }}
         />
-        <div className="text-gray-400">
-          <span className="block text-2xl mb-2">📷</span>
-          <span>Click to upload {field.label}</span>
+        <div className="flex flex-col items-center justify-center space-y-2">
+          {file ? (
+            <>
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-black mb-1"
+              >
+                ✔
+              </motion.div>
+              <p className="text-green-400 font-bold text-sm uppercase tracking-tighter">File Ready</p>
+              <p className="text-gray-400 text-xs truncate max-w-[250px] italic">{file.name}</p>
+              <span className="text-[10px] text-gray-500 underline mt-2 hover:text-orange-400">Click to replace file</span>
+            </>
+          ) : (
+            <>
+              <span className="text-3xl mb-2 opacity-50 block group-hover:scale-110 transition-transform">📷</span>
+              <p className="text-gray-400 font-bold text-xs uppercase tracking-widest">Select {field.label}</p>
+              <p className="text-[10px] text-gray-500 uppercase mt-1">Image format required (JPG, PNG)</p>
+            </>
+          )}
         </div>
       </div>
     );
@@ -608,6 +780,7 @@ function FieldInput({ field, onChange, onFileChange }) {
     <input
       type={field.type}
       required={field.mandatory}
+      value={value || ''}
       className={commonClasses}
       onChange={(e) => onChange(field.id, e.target.value)}
       placeholder={`Enter ${field.label}`}
