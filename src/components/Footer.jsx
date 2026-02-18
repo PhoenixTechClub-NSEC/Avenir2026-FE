@@ -20,7 +20,7 @@ export default function Footer() {
 
 
       {/* Floating particles */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* <div className="absolute inset-0 overflow-hidden">
         {[...Array(6)].map((_, i) => (
           <div
             key={i}
@@ -36,7 +36,7 @@ export default function Footer() {
             }}
           />
         ))}
-      </div>
+      </div> */}
 
       {/* Decorative bars */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 via-yellow-400 to-orange-500" />
@@ -67,7 +67,7 @@ export default function Footer() {
                 { icon: "fa-brands fa-facebook-f", link: "https://www.facebook.com/share/1BvM7Ws3vS/" },
                 { icon: "fa-brands fa-instagram", link: "https://www.instagram.com/phoenix_nsec/" },
                 { icon: "fa-brands fa-linkedin-in", link: "https://www.linkedin.com/company/phoenix-the-official-tech-club-of-netaji-subhash-engineering-college/" },
-                { icon: "fa-solid fa-globe", link: "https://phoenixnsec.in/" },
+                // { icon: "fa-solid fa-globe", link: "https://phoenixnsec.in/" },
               ].map((item, i) => (
                 <motion.a
                   key={i}
@@ -137,7 +137,7 @@ export default function Footer() {
               </div>
 
               {/* Phone */}
-              <div>
+              {/* <div>
                 <h4 className="text-orange-400 text-lg mb-4 flex items-center">
                   <i className="fa-solid fa-phone mr-2 text-orange-300" />
                   Call Us
@@ -155,7 +155,7 @@ export default function Footer() {
                     {num}
                   </a>
                 ))}
-              </div>
+              </div> */}
             </div>
           </motion.div>
         </div>

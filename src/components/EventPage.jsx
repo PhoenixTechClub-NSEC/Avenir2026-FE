@@ -5,14 +5,16 @@ import autoTable from 'jspdf-autotable';
 import { useNavigate } from "react-router";
 import bg from '../assets/Hero.jpeg';
 import { motion, AnimatePresence } from "framer-motion";
-import { Fireworks } from 'fireworks-js';
+// import { Fireworks } from 'fireworks-js';
 
+// event id added to wings anindita
 const EVENT_WING_MAP = {
   Robonix: ["EVT00008", "EVT00002", "EVT00003", "EVT00004"],
   Eloquense: ["EVT00005", "EVT00006", "EVT00007", "EVT00008"],
   Cybernix: ["EVT00009", "EVT00010", "EVT00011", "EVT00012"],
   Virtuix: ["EVT00013", "EVT00014", "EVT00015", "EVT00016"],
   Illustro: ["EVT00017", "EVT00018", "EVT00019", "EVT00020"],
+  Fun:[]
 };
 
 const WINGS = ["All", ...Object.keys(EVENT_WING_MAP)];
@@ -124,13 +126,15 @@ export default function EventPage() {
   };
 
   const generateReceipt = (data) => {
-    const doc = new jsPDF();
+    const doc = new jsPDF({
+      compress: true
+    });
     const pageWidth = doc.internal.pageSize.getWidth();
 
     // Helper to add images safely
-    const addImageQuietly = (url, x, y, w, h) => {
+    const addImageQuietly = (url, format, x, y, w, h) => {
       try {
-        doc.addImage(url, 'PNG', x, y, w, h);
+        doc.addImage(url, format, x, y, w, h, undefined, 'FAST');
       } catch (e) {
         console.error("Failed to add image to PDF", e);
       }
@@ -143,8 +147,8 @@ export default function EventPage() {
     // Logos
     // Assuming relative paths work or we use base64/absolute if served.
     // In dev, relative to public works if served.
-    addImageQuietly('/logo.png', 10, 5, 30, 30);
-    addImageQuietly('/phoenix.jpeg', pageWidth - 40, 5, 30, 30);
+    addImageQuietly('/logo.png', 'PNG', 10, 5, 30, 30);
+    addImageQuietly('/phoenix.jpeg', 'JPEG', pageWidth - 40, 5, 30, 30);
 
     // Title
     doc.setTextColor(255, 255, 255);
@@ -212,14 +216,19 @@ export default function EventPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (promoStatus !== 'valid') {
+    
+    // Use default promo code if none provided
+    const finalPromoCode = promoCode.trim() || 'NSESW6920';
+    
+    // Only check validation if user provided a custom code
+    if (promoCode.trim() && promoStatus !== 'valid') {
       alert("Please enter a valid Promo Code.");
       return;
     }
 
     setIsSubmitting(true);
     const data = new FormData();
-    data.append('promoCode', promoCode);
+    data.append('promoCode', finalPromoCode);
 
     // Append other fields
     Object.keys(formData).forEach(key => {
@@ -467,7 +476,6 @@ export default function EventPage() {
                           y: -3
                         }}
                         whileTap={{ scale: 0.95 }}
-                        whileTap={{ scale: 0.95 }}
                         onClick={() => handleRegister(event)}
                         className="w-full px-6 py-3 text-sm font-bold uppercase tracking-wider rounded-full bg-gradient-to-r from-yellow-500 via-orange-500 to-yellow-500 text-black transition-all duration-300 shadow-lg hover:shadow-[0_0_20px_rgba(255,165,0,0.6)] mt-4"
                       >
@@ -562,18 +570,17 @@ export default function EventPage() {
                       </h3>
 
                       <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Promo Code - Mandatory */}
+                        {/* Promo Code - Optional */}
                         <div>
                           <label className="block text-sm font-medium text-gray-400 mb-2">
-                            PROMO CODE <span className="text-red-500">*</span>
+                            PROMO CODE
                           </label>
                           <div className="relative">
                             <input
                               type="text"
-                              required
                               value={promoCode}
                               onChange={handlePromoChange}
-                              placeholder="Enter Campus Ambassador Code"
+                              placeholder="Enter Campus Ambassador Code (Optional)"
                               className={`w-full bg-gray-800 border rounded-lg px-4 py-3 text-white focus:outline-none transition-colors uppercase
                                        ${promoStatus === 'valid' ? 'border-green-500 focus:border-green-500' :
                                   promoStatus === 'invalid' ? 'border-red-500 focus:border-red-500' :
@@ -613,9 +620,9 @@ export default function EventPage() {
 
                         <button
                           type="submit"
-                          disabled={isSubmitting || promoStatus !== 'valid'}
+                          disabled={isSubmitting || (promoCode.trim() && promoStatus !== 'valid')}
                           className={`w-full py-4 text-black font-black uppercase tracking-widest rounded-lg transition-all duration-300
-                                 ${isSubmitting || promoStatus !== 'valid'
+                                 ${isSubmitting || (promoCode.trim() && promoStatus !== 'valid')
                               ? 'bg-gray-700 cursor-not-allowed text-gray-500'
                               : 'bg-gradient-to-r from-orange-500 to-yellow-500 hover:shadow-[0_0_30px_rgba(255,165,0,0.6)] transform hover:-translate-y-1'}
                               `}
