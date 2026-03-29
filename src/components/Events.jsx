@@ -291,12 +291,18 @@ export default function Events() {
                     transition={{ delay: 0.4 }}
                     className="flex gap-4"
                   >
-                    <Link
-                      to="/events"
-                      className="flex-1 bg-gradient-to-r from-yellow-500 via-orange-500 to-red-600 px-6 py-4 font-black uppercase tracking-wider text-black rounded-xl border-2 border-black text-center hover:scale-105 transition-all duration-300 shadow-[0_10px_30px_rgba(255,165,0,0.3)]"
-                    >
-                      Register Now
-                    </Link>
+                    {events[currentEventIndex]?.status !== "active" || events[currentEventIndex]?.currentRegistrations >= events[currentEventIndex]?.maxRegistrations ? (
+                      <div className="flex-1 bg-gray-600 px-6 py-4 font-black uppercase tracking-wider text-gray-400 rounded-xl border-2 border-gray-500 text-center cursor-not-allowed">
+                        Registration Inactive
+                      </div>
+                    ) : (
+                      <Link
+                        to="/events"
+                        className="flex-1 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 px-6 py-4 font-black uppercase tracking-wider text-black rounded-xl border-2 border-black text-center hover:scale-105 transition-all duration-300 shadow-[0_10px_30px_rgba(255,165,0,0.3)]"
+                      >
+                        Register ASAP
+                      </Link>
+                    )}
                   </motion.div>
                 </div>
               </div>

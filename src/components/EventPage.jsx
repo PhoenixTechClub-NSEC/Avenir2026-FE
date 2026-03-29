@@ -469,18 +469,24 @@ export default function EventPage() {
                         </AnimatePresence>
                       </div>
 
-                      <motion.button
-                        whileHover={{
-                          scale: 1.05,
-                          boxShadow: "0 0 30px rgba(255, 165, 0, 0.8)",
-                          y: -3
-                        }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleRegister(event)}
-                        className="w-full px-6 py-3 text-sm font-bold uppercase tracking-wider rounded-full bg-gradient-to-r from-yellow-500 via-orange-500 to-yellow-500 text-black transition-all duration-300 shadow-lg hover:shadow-[0_0_20px_rgba(255,165,0,0.6)] mt-4"
-                      >
-                        Register Now
-                      </motion.button>
+                      {event.status !== "active" || event.currentRegistrations >= event.maxRegistrations ? (
+                        <div className="w-full px-6 py-3 text-sm font-bold uppercase tracking-wider rounded-full bg-gray-600 text-gray-400 text-center mt-4 cursor-not-allowed">
+                          Registration Inactive
+                        </div>
+                      ) : (
+                        <motion.button
+                          whileHover={{
+                            scale: 1.05,
+                            boxShadow: "0 0 30px rgba(255, 165, 0, 0.8)",
+                            y: -3
+                          }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => handleRegister(event)}
+                          className="w-full px-6 py-3 text-sm font-bold uppercase tracking-wider rounded-full bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 text-black transition-all duration-300 shadow-lg hover:shadow-[0_0_20px_rgba(255,165,0,0.6)] mt-4"
+                        >
+                          Register
+                        </motion.button>
+                      )}
                     </div>
 
                     {/* Hover effect: animated corner accents */}
