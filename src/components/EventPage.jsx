@@ -147,7 +147,7 @@ export default function EventPage() {
     // Logos
     // Assuming relative paths work or we use base64/absolute if served.
     // In dev, relative to public works if served.
-    addImageQuietly('https://res.cloudinary.com/drvbkxnvu/image/upload/f_auto,q_auto,c_limit/v1771862796/avenirHS_logo_fqeplp.jpg', 'PNG', 10, 5, 30, 30);
+    addImageQuietly('/avenir%20logo.jpeg', 'JPEG', 10, 5, 30, 30);
     addImageQuietly('https://res.cloudinary.com/drvbkxnvu/image/upload/f_auto,q_auto,c_limit/v1771424036/phoenix_r7onnu.webp', 'JPEG', pageWidth - 40, 5, 30, 30);
 
     // Title

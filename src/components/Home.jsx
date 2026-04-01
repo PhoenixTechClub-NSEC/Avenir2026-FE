@@ -47,7 +47,7 @@ const Home = () => {
   })
 
   useEffect(() => {
-    const targetDate = new Date('February 27, 2026 10:00:00').getTime()
+    const targetDate = new Date('April 17, 2026 10:00:00').getTime()
 
     const interval = setInterval(() => {
       const now = new Date().getTime()

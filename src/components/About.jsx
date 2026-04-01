@@ -159,10 +159,10 @@ export default function About() {
 
           {/* Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 pt-6">
-            <StatCard icon="👥" value={5000} suffix="+" label="Participants" />
-            <StatCard icon="📅" value={10} suffix="th" label="Edition" />
-            <StatCard icon="🏆" value={50} suffix="+" label="Events" />
-            <StatCard icon="💰" value={10} suffix="L+" label="Prize Pool" />
+            <StatCard icon="👥" value={1000} suffix="+" label="Participants" />
+            <StatCard icon="📅" value={20} suffix="th" label="Edition" />
+            <StatCard icon="🏆" value={20} suffix="+" label="Events" />
+            <StatCard icon="💰" value={2} suffix="L+" label="Prize Pool" />
           </div>
         </motion.div>
 

@@ -75,7 +75,7 @@ const Navbar = () => {
       <nav className="sticky top-0 z-50 w-full bg-transparent backdrop-blur-xl">
         <div className="flex w-full items-center justify-between px-4 md:px-auto">
 
-          <img src="https://res.cloudinary.com/drvbkxnvu/image/upload/f_auto,q_auto,c_limit/v1771863596/Picsart_26-02-23_09-37-42-100_gpwhxd.png" alt="logo" className="h-16 md:h-22 ml-2 md:ml-7 mt-1 mr-2 md:mr-8" />
+          <img src="/avenir%20logo%20transparent.png" alt="logo" className="h-16 md:h-22 ml-2 md:ml-7 mt-1 mr-2 md:mr-8 object-contain" />
 
           {/* Desktop Navigation */}
           <ul className="hidden lg:flex cursor-pointer items-center gap-9 text-sm font-medium">
