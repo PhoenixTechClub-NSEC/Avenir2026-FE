@@ -54,9 +54,11 @@ export default function EventPage() {
   };
 
   const filteredEvents = (activeWing === "All"
-    ? apiEvents.map(event => ({ ...event, wing: getWingForEvent(event.eventId) }))
+    ? apiEvents
+      .filter(event => event.status === "active")
+      .map(event => ({ ...event, wing: getWingForEvent(event.eventId) }))
     : apiEvents
-      .filter(event => EVENT_WING_MAP[activeWing]?.includes(event.eventId))
+      .filter(event => EVENT_WING_MAP[activeWing]?.includes(event.eventId) && event.status === "active")
       .map(event => ({ ...event, wing: activeWing }))
   );
 
@@ -260,10 +262,18 @@ export default function EventPage() {
                         </AnimatePresence>
                       </div>
 
-                      {event.status !== "active" || event.currentRegistrations >= event.maxRegistrations ? (
-                        <div className="w-full px-6 py-3 text-sm font-bold uppercase tracking-wider rounded-full bg-gray-600 text-gray-400 text-center mt-4 cursor-not-allowed">
-                          Registration Inactive
-                        </div>
+                      {event.currentRegistrations >= event.maxRegistrations ? (
+                        <motion.button
+                          whileHover={{
+                            scale: 1.02,
+                            boxShadow: "0 0 12px rgba(255, 0, 0, 0.8)",
+                          }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => alert("Registration is full for this event.")}
+                          className="w-full px-6 py-3 text-sm font-bold uppercase tracking-wider rounded-full bg-red-600 text-white transition-all duration-300 shadow-lg mt-4"
+                        >
+                          Registration Full
+                        </motion.button>
                       ) : (
                         <motion.button
                           whileHover={{

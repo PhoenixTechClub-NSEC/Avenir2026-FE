@@ -74,7 +74,8 @@ export default function Events() {
         const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/all`);
         const result = await response.json();
         if (result.success && result.data) {
-          setEvents(result.data);
+          // Only show active events on home events section
+          setEvents(result.data.filter(event => event.status === "active"));
         } else {
           setEvents([]);
         }
@@ -291,9 +292,9 @@ export default function Events() {
                     transition={{ delay: 0.4 }}
                     className="flex gap-4"
                   >
-                    {events[currentEventIndex]?.status !== "active" || events[currentEventIndex]?.currentRegistrations >= events[currentEventIndex]?.maxRegistrations ? (
-                      <div className="flex-1 bg-gray-600 px-6 py-4 font-black uppercase tracking-wider text-gray-400 rounded-xl border-2 border-gray-500 text-center cursor-not-allowed">
-                        Registration Inactive
+                    {events[currentEventIndex]?.currentRegistrations >= events[currentEventIndex]?.maxRegistrations ? (
+                      <div className="flex-1 bg-red-600 px-6 py-4 font-black uppercase tracking-wider text-white rounded-xl border-2 border-red-600 text-center">
+                        Registration Full
                       </div>
                     ) : (
                       <Link

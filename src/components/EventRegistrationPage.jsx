@@ -240,6 +240,39 @@ export default function EventRegistrationPage() {
     );
   }
 
+  const isInactive = event.status !== "active";
+  const isFull = event.currentRegistrations >= event.maxRegistrations;
+
+  if (isInactive) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white p-6">
+        <h2 className="text-3xl font-bold mb-4">Event Unavailable</h2>
+        <p className="text-gray-400 mb-6">This event is currently inactive and cannot be registered.</p>
+        <button
+          onClick={() => navigate('/events')}
+          className="px-8 py-3 bg-orange-500 text-black font-bold rounded-full hover:bg-orange-400 transition"
+        >
+          Check Other Events
+        </button>
+      </div>
+    );
+  }
+
+  if (isFull) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white p-6">
+        <h2 className="text-3xl font-bold mb-4">Registration Full</h2>
+        <p className="text-gray-400 mb-6">This event has reached maximum registration capacity.</p>
+        <button
+          onClick={() => navigate('/events')}
+          className="px-8 py-3 bg-orange-500 text-black font-bold rounded-full hover:bg-orange-400 transition"
+        >
+          Check Other Events
+        </button>
+      </div>
+    );
+  }
+
   return (
     <>
       <div
@@ -314,6 +347,35 @@ export default function EventRegistrationPage() {
                 </div>
               </div>
 
+              {/* Payment Details Section */}
+              {event.registrationFee !== 0 && event.registrationFee !== "0" && (event.paymentQRUrl || event.upiId) && (
+                <div className="bg-black/30 p-6 rounded-lg border border-orange-600/40 mt-6">
+                  <h4 className="text-sm font-bold text-orange-400 uppercase tracking-widest mb-4">Payment Details</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* QR Code */}
+                    {event.paymentQRUrl && (
+                      <div className="flex flex-col items-center justify-center">
+                        <p className="text-xs text-gray-500 uppercase tracking-widest mb-3">Scan to Pay</p>
+                        <img
+                          src={event.paymentQRUrl}
+                          alt="Payment QR Code"
+                          className="w-40 h-40 border-2 border-orange-500/50 rounded-lg p-2 bg-white"
+                        />
+                      </div>
+                    )}
+                    {/* UPI ID */}
+                    {event.upiId && (
+                      <div className="flex flex-col items-center justify-center">
+                        <p className="text-xs text-gray-500 uppercase tracking-widest mb-3">UPI ID</p>
+                        <div className="bg-black/50 p-4 rounded-lg border border-gray-700 w-full text-center">
+                          <p className="text-orange-400 font-mono font-bold text-lg break-words">{event.upiId}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {event.instructionLink && (
                 <a
                   href={event.instructionLink}
@@ -321,7 +383,7 @@ export default function EventRegistrationPage() {
                   rel="noreferrer"
                   className="block w-full text-center py-3 border border-blue-500/50 text-blue-400 rounded-lg hover:bg-blue-500/10 transition-colors"
                 >
-                  Example / Instructions Guidelines ↗
+                  Rule Book ↗
                 </a>
               )}
             </div>
@@ -331,7 +393,7 @@ export default function EventRegistrationPage() {
           <div className="bg-black/60 backdrop-blur-md rounded-2xl p-8 border-2 border-orange-600/40">
             <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
               <span className="w-2 h-8 bg-orange-500 rounded-full"></span>
-              Registration Protocol
+              Registration form
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-6">
