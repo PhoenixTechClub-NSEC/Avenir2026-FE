@@ -144,7 +144,7 @@ const Home = () => {
                     <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
                   </svg>
                   {/* Month DD-DD, 2026 */}
-                  <span className="text-yellow-500">Coming soon...</span> 
+                  <span className="text-yellow-500">17th, 18th & 19th April, 2026</span> 
                 </div>
                 <div className="hidden sm:block border-l-2 h-9 border-white"></div>
                 <div className="flex items-center gap-2">
@@ -157,7 +157,7 @@ const Home = () => {
               <hr className='mt-[20px]'/>
               {/* Countdown Timer */}
                 <div className="pt-5">
-                <h2 className="text-[18px] mb-3 font-semibold">TECH FEST HEADSTARTS IN</h2>
+                <h2 className="text-[18px] mb-3 font-semibold">TECH FEST STARTS IN</h2>
                 <div className="grid grid-cols-4 sm:grid-cols-4 gap-2">
                   <div className="bg-black bg-opacity-50 backdrop-blur-sm border border-gray-700 rounded-lg p-3 sm:p-4 text-center">
                     <div className="text-xl sm:text-2xl font-bold text-yellow-500">{String(timeLeft.days).padStart(2, '0')}</div>

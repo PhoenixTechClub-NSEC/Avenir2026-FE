@@ -18,6 +18,7 @@ export default function EventRegistrationPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [lastSubmissionData, setLastSubmissionData] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -365,7 +366,7 @@ export default function EventRegistrationPage() {
                         <img
                           src={event.paymentQRUrl}
                           alt="Payment QR Code"
-                          className="w-40 h-40 border-2 border-orange-500/50 rounded-lg p-2 bg-white"
+                          className="max-w-[200px] w-full h-auto border-2 border-orange-500/50 rounded-lg p-2 bg-white"
                         />
                       </div>
                     )}
@@ -373,8 +374,19 @@ export default function EventRegistrationPage() {
                     {event.upiId && (
                       <div className="flex flex-col items-center justify-center">
                         <p className="text-xs text-gray-300 uppercase tracking-widest mb-3">UPI ID</p>
-                        <div className="bg-black/50 p-4 rounded-lg border border-gray-700 w-full text-center">
-                          <p className="text-orange-400 font-mono font-bold text-lg break-words">{event.upiId}</p>
+                        <div className="bg-black/50 p-4 rounded-lg border border-gray-700 w-full flex items-center justify-center gap-3">
+                          <p className="text-orange-400 font-mono font-bold text-lg break-all">{event.upiId}</p>
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(event.upiId);
+                              setCopied(true);
+                              setTimeout(() => setCopied(false), 2000);
+                            }}
+                            className="text-gray-400 hover:text-orange-400 transition-colors p-2 rounded-md hover:bg-orange-500/10 ring-1 ring-white/10"
+                            title="Copy UPI ID"
+                          >
+                            <i className={`fas ${copied ? 'fa-check text-green-500' : 'fa-copy'}`}></i>
+                          </button>
                         </div>
                       </div>
                     )}
