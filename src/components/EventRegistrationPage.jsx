@@ -18,6 +18,7 @@ export default function EventRegistrationPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [lastSubmissionData, setLastSubmissionData] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -247,7 +248,7 @@ export default function EventRegistrationPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white p-6">
         <h2 className="text-3xl font-bold mb-4">Event Unavailable</h2>
-        <p className="text-gray-400 mb-6">This event is currently inactive and cannot be registered.</p>
+        <p className="text-gray-200 mb-6">This event is currently inactive and cannot be registered.</p>
         <button
           onClick={() => navigate('/events')}
           className="px-8 py-3 bg-orange-500 text-black font-bold rounded-full hover:bg-orange-400 transition"
@@ -262,7 +263,7 @@ export default function EventRegistrationPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white p-6">
         <h2 className="text-3xl font-bold mb-4">Registration Full</h2>
-        <p className="text-gray-400 mb-6">This event has reached maximum registration capacity.</p>
+        <p className="text-gray-200 mb-6">This event has reached maximum registration capacity.</p>
         <button
           onClick={() => navigate('/events')}
           className="px-8 py-3 bg-orange-500 text-black font-bold rounded-full hover:bg-orange-400 transition"
@@ -281,7 +282,7 @@ export default function EventRegistrationPage() {
       />
       <div className="fixed inset-0 z-0 bg-black/60" />
 
-      <section className="min-h-screen bg-no-repeat bg-cover bg-fixed bg-center px-6 py-16 text-white overflow-hidden" style={{ backgroundImage: `url(${bg})` }}>
+      <section className="relative z-10 min-h-screen px-6 py-16 text-white overflow-hidden">
         <div className="relative z-10 max-w-4xl mx-auto">
           {/* Back to events button */}
           <motion.button
@@ -293,7 +294,7 @@ export default function EventRegistrationPage() {
               boxShadow: "0 0 20px rgba(255, 165, 0, 0.6)"
             }}
             whileTap={{ scale: 0.95 }}
-            className="bg-transparent text-orange-400 px-6 py-3 font-bold text-lg text-center rounded-full cursor-pointer border-2 border-orange-500 hover:bg-orange-500/10 transition-all mb-8 backdrop-blur-sm"
+            className="fixed top-6 left-6 z-[100] bg-black/60 text-orange-400 px-4 py-2 sm:px-6 sm:py-3 font-bold text-sm sm:text-lg text-center rounded-full cursor-pointer border-2 border-orange-500 hover:bg-orange-500/20 transition-all backdrop-blur-md shadow-lg"
             onClick={() => navigate('/events')}
           >
             ← BACK TO EVENTS
@@ -303,12 +304,18 @@ export default function EventRegistrationPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
+            whileHover={{
+              rotate: -2,
+              scale: 1.02,
+              boxShadow: "0 0 30px rgba(255, 200, 0, 0.4)"
+            }}
+            transition={{ duration: 0.3 }}
+            className="mb-8 w-full max-w-md mx-auto rounded-2xl"
           >
             <img
               src={event.posterUrl || "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=600&h=900&auto=format&fit=crop"}
               alt={event.name}
-              className="w-full max-w-md mx-auto rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+              className="w-full rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
             />
           </motion.div>
 
@@ -328,8 +335,8 @@ export default function EventRegistrationPage() {
           </motion.h1>
 
           {/* Event Details */}
-          <div className="bg-black/60 backdrop-blur-md rounded-2xl p-8 mb-8 border-2 border-orange-600/40">
-            <div className="space-y-4 text-gray-300">
+          <div className="relative overflow-hidden bg-white/5 backdrop-blur-xl rounded-2xl p-8 mb-8 border border-white/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),0_8px_32px_rgba(0,0,0,0.5)] hover:border-yellow-500/60 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),0_0_25px_rgba(255,200,0,0.4)] transition-all duration-500 group">
+            <div className="space-y-4 text-gray-100">
               {event.description && (
                 <p className="leading-relaxed bg-black/30 p-4 rounded-lg border border-gray-800">
                   {event.description}
@@ -338,11 +345,11 @@ export default function EventRegistrationPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-black/30 p-4 rounded-lg border border-gray-800">
-                  <label className="text-xs text-gray-500 uppercase tracking-widest block mb-1">Date</label>
+                  <label className="text-xs text-gray-300 uppercase tracking-widest block mb-1">Date</label>
                   <span className="text-orange-100 font-bold">{event.date || "TBA"}</span>
                 </div>
                 <div className="bg-black/30 p-4 rounded-lg border border-gray-800">
-                  <label className="text-xs text-gray-500 uppercase tracking-widest block mb-1">Fee</label>
+                  <label className="text-xs text-gray-300 uppercase tracking-widest block mb-1">Fee</label>
                   <span className="text-orange-400 font-bold">₹{event.registrationFee || "0"}</span>
                 </div>
               </div>
@@ -355,20 +362,31 @@ export default function EventRegistrationPage() {
                     {/* QR Code */}
                     {event.paymentQRUrl && (
                       <div className="flex flex-col items-center justify-center">
-                        <p className="text-xs text-gray-500 uppercase tracking-widest mb-3">Scan to Pay</p>
+                        <p className="text-xs text-gray-300 uppercase tracking-widest mb-3">Scan to Pay</p>
                         <img
                           src={event.paymentQRUrl}
                           alt="Payment QR Code"
-                          className="w-40 h-40 border-2 border-orange-500/50 rounded-lg p-2 bg-white"
+                          className="max-w-[200px] w-full h-auto border-2 border-orange-500/50 rounded-lg p-2 bg-white"
                         />
                       </div>
                     )}
                     {/* UPI ID */}
                     {event.upiId && (
                       <div className="flex flex-col items-center justify-center">
-                        <p className="text-xs text-gray-500 uppercase tracking-widest mb-3">UPI ID</p>
-                        <div className="bg-black/50 p-4 rounded-lg border border-gray-700 w-full text-center">
-                          <p className="text-orange-400 font-mono font-bold text-lg break-words">{event.upiId}</p>
+                        <p className="text-xs text-gray-300 uppercase tracking-widest mb-3">UPI ID</p>
+                        <div className="bg-black/50 p-4 rounded-lg border border-gray-700 w-full flex items-center justify-center gap-3">
+                          <p className="text-orange-400 font-mono font-bold text-lg break-all">{event.upiId}</p>
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(event.upiId);
+                              setCopied(true);
+                              setTimeout(() => setCopied(false), 2000);
+                            }}
+                            className="text-gray-400 hover:text-orange-400 transition-colors p-2 rounded-md hover:bg-orange-500/10 ring-1 ring-white/10"
+                            title="Copy UPI ID"
+                          >
+                            <i className={`fas ${copied ? 'fa-check text-green-500' : 'fa-copy'}`}></i>
+                          </button>
                         </div>
                       </div>
                     )}
@@ -381,7 +399,7 @@ export default function EventRegistrationPage() {
                   href={event.instructionLink}
                   target="_blank"
                   rel="noreferrer"
-                  className="block w-full text-center py-3 border border-blue-500/50 text-blue-400 rounded-lg hover:bg-blue-500/10 transition-colors"
+                  className="block w-full text-center py-3 border border-yellow-500/50 text-yellow-500 rounded-lg hover:bg-yellow-500/10 transition-colors"
                 >
                   Rule Book ↗
                 </a>
@@ -390,7 +408,7 @@ export default function EventRegistrationPage() {
           </div>
 
           {/* Registration Form */}
-          <div className="bg-black/60 backdrop-blur-md rounded-2xl p-8 border-2 border-orange-600/40">
+          <div className="relative overflow-hidden bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),0_8px_32px_rgba(0,0,0,0.5)] hover:border-yellow-500/60 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),0_0_25px_rgba(255,200,0,0.4)] transition-all duration-500 group">
             <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
               <span className="w-2 h-8 bg-orange-500 rounded-full"></span>
               Registration form
@@ -399,10 +417,10 @@ export default function EventRegistrationPage() {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Promo Code - Required */}
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">
+                <label className="block text-sm font-medium text-gray-200 mb-2">
                   PROMO CODE <span className="text-red-500">*</span>
                 </label>
-                <p className="text-xs text-gray-500 mb-3">
+                <p className="text-xs text-gray-300 mb-3">
                   Get your promo code from {" "}
                   <a
                     href="/campus_rep"
@@ -412,7 +430,7 @@ export default function EventRegistrationPage() {
                   >
                     Campus Ambassadors
                   </a>{" "}
-                  
+
                 </p>
                 <div className="relative">
                   <input
@@ -422,19 +440,19 @@ export default function EventRegistrationPage() {
                     placeholder="Enter Campus Ambassador Code"
                     required
                     className={`w-full bg-gray-800 border rounded-lg px-4 py-3 text-white focus:outline-none transition-colors uppercase
-                             ${promoStatus === 'valid' ? 'border-green-500 focus:border-green-500' :
+                             ${promoStatus === 'valid' ? 'border-yellow-500 focus:border-yellow-500' :
                         promoStatus === 'invalid' ? 'border-red-500 focus:border-red-500' :
-                          'border-gray-700 focus:border-orange-500'}
-                          `}
+                           'border-gray-700 focus:border-orange-500'}
+                           `}
                   />
                   <div className="absolute right-3 top-3">
                     {promoStatus === 'loading' && <div className="animate-spin h-5 w-5 border-2 border-orange-500 border-t-transparent rounded-full"></div>}
-                    {promoStatus === 'valid' && <span className="text-green-500">✔</span>}
+                    {promoStatus === 'valid' && <span className="text-yellow-500">✔</span>}
                     {promoStatus === 'invalid' && <span className="text-red-500">✖</span>}
                   </div>
                 </div>
                 {promoDetails && (
-                  <div className="mt-2 text-sm text-green-400 bg-green-900/20 p-2 rounded border border-green-900/50">
+                  <div className="mt-2 text-sm text-yellow-400 bg-yellow-900/20 p-2 rounded border border-yellow-900/50">
                     Verified: {promoDetails.caName} ({promoDetails.collegeName})
                   </div>
                 )}
@@ -446,7 +464,7 @@ export default function EventRegistrationPage() {
               {/* Dynamic Fields */}
               {event.fields && event.fields.map((field) => (
                 <div key={field.id}>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                  <label className="block text-sm font-medium text-gray-200 mb-2">
                     {field.label} {field.mandatory && <span className="text-red-500">*</span>}
                   </label>
                   <FieldInput
@@ -463,7 +481,7 @@ export default function EventRegistrationPage() {
                 disabled={isSubmitting || promoStatus !== 'valid'}
                 className={`w-full py-4 text-black font-black uppercase tracking-widest rounded-lg transition-all duration-300
                        ${isSubmitting || promoStatus !== 'valid'
-                    ? 'bg-gray-700 cursor-not-allowed text-gray-500'
+                    ? 'bg-gray-700 cursor-not-allowed text-gray-300'
                     : 'bg-gradient-to-r from-orange-500 to-yellow-500 hover:shadow-[0_0_30px_rgba(255,165,0,0.6)] transform hover:-translate-y-1'}
                     `}
               >
@@ -485,26 +503,26 @@ export default function EventRegistrationPage() {
               <motion.div
                 initial={{ scale: 0.8, y: 20 }}
                 animate={{ scale: 1, y: 0 }}
-                className="bg-gray-900 border-2 border-green-500/50 rounded-3xl p-8 max-w-md w-full text-center shadow-[0_0_100px_rgba(34,197,94,0.3)]"
+                className="bg-gray-900 border-2 border-orange-500/50 rounded-3xl p-8 max-w-md w-full text-center shadow-[0_0_100px_rgba(255,140,0,0.3)]"
               >
-                <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(34,197,94,0.5)]">
+                <div className="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(255,140,0,0.5)]">
                   <span className="text-4xl text-black font-bold">✔</span>
                 </div>
 
                 <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">
                   Success!
                 </h2>
-                <p className="text-gray-400 mb-8">
+                <p className="text-gray-200 mb-8">
                   Your registration for <span className="text-orange-400 font-bold">{event.name}</span> has been confirmed.
                 </p>
 
                 <div className="bg-black/50 rounded-2xl p-4 mb-8 border border-gray-800 text-left space-y-2">
                   <div className="flex justify-between text-xs">
-                    <span className="text-gray-500">SUBMISSION ID</span>
-                    <span className="text-green-400 font-mono">{lastSubmissionData?.submissionId}</span>
+                    <span className="text-gray-300">SUBMISSION ID</span>
+                    <span className="text-orange-400 font-mono">{lastSubmissionData?.submissionId}</span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-gray-500">COLLEGE</span>
+                    <span className="text-gray-300">COLLEGE</span>
                     <span className="text-white uppercase font-bold">{lastSubmissionData?.collegeName}</span>
                   </div>
                 </div>
@@ -512,7 +530,7 @@ export default function EventRegistrationPage() {
                 <div className="grid grid-cols-1 gap-4">
                   <button
                     onClick={() => generateReceipt(lastSubmissionData)}
-                    className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-black font-black uppercase tracking-widest rounded-xl hover:shadow-[0_0_30px_rgba(34,197,94,0.4)] transition-all transform hover:-translate-y-1"
+                    className="w-full py-4 bg-gradient-to-r from-orange-500 to-yellow-500 text-black font-black uppercase tracking-widest rounded-xl hover:shadow-[0_0_30px_rgba(255,140,0,0.4)] transition-all transform hover:-translate-y-1"
                   >
                     <i className="fas fa-download mr-2"></i>
                     Download Receipt
@@ -522,7 +540,7 @@ export default function EventRegistrationPage() {
                       setShowSuccess(false);
                       navigate('/events');
                     }}
-                    className="w-full py-3 text-gray-500 hover:text-white transition-colors uppercase text-xs font-bold tracking-widest"
+                    className="w-full py-3 text-gray-300 hover:text-white transition-colors uppercase text-xs font-bold tracking-widest"
                   >
                     Back to Events
                   </button>
@@ -595,14 +613,14 @@ function FieldInput({ field, value, onChange, onFileChange }) {
                 ✔
               </motion.div>
               <p className="text-green-400 font-bold text-sm uppercase tracking-tighter">File Ready</p>
-              <p className="text-gray-400 text-xs truncate max-w-[250px] italic">{file.name}</p>
-              <span className="text-[10px] text-gray-500 underline mt-2 hover:text-orange-400">Click to replace file</span>
+              <p className="text-gray-200 text-xs truncate max-w-[250px] italic">{file.name}</p>
+              <span className="text-[10px] text-gray-300 underline mt-2 hover:text-orange-400">Click to replace file</span>
             </>
           ) : (
             <>
               <span className="text-3xl mb-2 opacity-50 block group-hover:scale-110 transition-transform">📷</span>
-              <p className="text-gray-400 font-bold text-xs uppercase tracking-widest">Select {field.label}</p>
-              <p className="text-[10px] text-gray-500 uppercase mt-1">Image format required (JPG, PNG)</p>
+              <p className="text-gray-200 font-bold text-xs uppercase tracking-widest">Select {field.label}</p>
+              <p className="text-[10px] text-gray-300 uppercase mt-1">Image format required (JPG, PNG)</p>
             </>
           )}
         </div>
