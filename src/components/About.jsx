@@ -149,7 +149,7 @@ export default function About() {
             </p>
 
             <p>
-              The fest comprises of many wings such as Public Speaking, Robotics, Designing, Coding, and E-Gaming, each hosting engaging competitions and skill-based challenges. In addition to technical events, Avenir also features exciting fun activities.
+              The fest comprises of many wings such as Public Speaking, Robotics, Designing, Coding, and E-Gaming, each hosting engaging competitions and skill-based challenges. In addition to technical events, Avenir also features exciting flagship events.
             </p>
 
             <p>
