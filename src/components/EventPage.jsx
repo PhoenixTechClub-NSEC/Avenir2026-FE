@@ -4,12 +4,12 @@ import { motion, AnimatePresence } from "framer-motion";
 const bg = "https://res.cloudinary.com/drvbkxnvu/image/upload/f_auto,q_auto,c_limit/v1771424037/Hero_uhasvh.webp"
 // event id added to wings anindita
 const EVENT_WING_MAP = {
-  Robonix: [],
-  Eloquense: ["EVT00002"],
-  Cybernix: [],
-  Virtuix: ["EVT00003"],
-  Illustro: ["EVT00004"],
-  Fun:["EVT00001"]
+  Robonix: ["EVT00016", "EVT00014", "EVT00017", "EVT00018"],
+  Eloquense: ["EVT00011", "EVT00012", "EVT00015", "EVT00019"],
+  Cybernix: ["EVT00010", "EVT00013"],
+  Virtuix: ["EVT00021"],
+  Illustro: ["EVT00007", "EVT00008", "EVT00009", "EVT00020"],
+  Flagship: ["EVT00013", "EVT00020", "EVT00022", "EVT00023"]
 };
 
 const WINGS = ["All", ...Object.keys(EVENT_WING_MAP)];
@@ -50,7 +50,7 @@ export default function EventPage() {
   };
 
   const getWingForEvent = (eventId) => {
-    return Object.keys(EVENT_WING_MAP).find(wing => EVENT_WING_MAP[wing].includes(eventId)) || "General";
+    return Object.keys(EVENT_WING_MAP).find(wing => wing !== "Flagship" && EVENT_WING_MAP[wing].includes(eventId)) || "General";
   };
 
   const filteredEvents = (activeWing === "All"
@@ -59,7 +59,7 @@ export default function EventPage() {
       .map(event => ({ ...event, wing: getWingForEvent(event.eventId) }))
     : apiEvents
       .filter(event => EVENT_WING_MAP[activeWing]?.includes(event.eventId) && event.status === "active")
-      .map(event => ({ ...event, wing: activeWing }))
+      .map(event => ({ ...event, wing: getWingForEvent(event.eventId) }))
   );
 
 
@@ -196,7 +196,7 @@ export default function EventPage() {
                         transition={{ duration: 0.6 }}
                         src={event.posterUrl || "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=600&h=900&auto=format&fit=crop"}
                         alt={event.name}
-                        className="w-full h-56 object-cover"
+                        className="w-full h-56 object-contain bg-black/40"
                       />
                       {/* Gradient overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300" />

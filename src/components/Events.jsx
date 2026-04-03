@@ -47,12 +47,12 @@ const buttonVariants = {
 
 
 const EVENT_WING_MAP = {
-  Robonix: [],
-  Eloquense: ["EVT00002"],
-  Cybernix: [],
-  Virtuix: ["EVT00003"],
-  Illustro: ["EVT00004"],
-  Fun:["EVT00001"]
+  Robonix: ["EVT00016", "EVT00014", "EVT00017", "EVT00018"],
+  Eloquense: ["EVT00011", "EVT00012", "EVT00015", "EVT00019"],
+  Cybernix: ["EVT00010", "EVT00013"],
+  Virtuix: ["EVT00021"],
+  Illustro: ["EVT00007", "EVT00008", "EVT00009", "EVT00020"],
+  Flagship: ["EVT00013", "EVT00020", "EVT00022", "EVT00023"]
 };
 
 export default function Events() {
@@ -63,7 +63,7 @@ export default function Events() {
   const totalEventCount = events.length;
 
   const getWingForEvent = (eventId) => {
-    return Object.keys(EVENT_WING_MAP).find(wing => EVENT_WING_MAP[wing].includes(eventId)) || "General";
+    return Object.keys(EVENT_WING_MAP).find(wing => wing !== "Flagship" && EVENT_WING_MAP[wing].includes(eventId)) || "General";
   };
 
   // Fetch events from API
@@ -233,7 +233,7 @@ export default function Events() {
                   <img
                     src={events[currentEventIndex]?.posterUrl || "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=600&h=900&auto=format&fit=crop"}
                     alt={events[currentEventIndex]?.name}
-                    className="w-full h-full object-cover aspect-[4/5] lg:aspect-auto max-h-[400px] lg:max-h-none"
+                    className="w-full h-full object-contain bg-black/40 aspect-[4/5] lg:aspect-auto max-h-[400px] lg:max-h-none"
                   />
                 </motion.div>
 
@@ -333,15 +333,15 @@ export default function Events() {
                   animate={
                     index === currentEventIndex
                       ? {
-                          backgroundColor: "#FCD34D",
-                          boxShadow: "0 0 30px rgba(250, 204, 21, 0.9)",
-                          scale: 1.2,
-                        }
+                        backgroundColor: "#FCD34D",
+                        boxShadow: "0 0 30px rgba(250, 204, 21, 0.9)",
+                        scale: 1.2,
+                      }
                       : {
-                          backgroundColor: "rgba(0, 0, 0, 0.6)",
-                          boxShadow: "0 0 0px transparent",
-                          scale: 1,
-                        }
+                        backgroundColor: "rgba(0, 0, 0, 0.6)",
+                        boxShadow: "0 0 0px transparent",
+                        scale: 1,
+                      }
                   }
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   className="w-3 h-3 border-2 border-yellow-400 rounded-full"
