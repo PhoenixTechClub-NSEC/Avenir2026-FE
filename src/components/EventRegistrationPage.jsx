@@ -430,6 +430,8 @@ export default function EventRegistrationPage() {
                   >
                     Campus Ambassadors
                   </a>{" "}
+                  <span>Or use NSEC's code "NSESW6920"</span>
+
 
                 </p>
                 <div className="relative">
