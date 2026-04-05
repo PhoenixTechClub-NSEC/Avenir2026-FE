@@ -55,6 +55,38 @@ const EVENT_WING_MAP = {
   Flagship: ["EVT00013", "EVT00020", "EVT00022", "EVT00023"]
 };
 
+// Prize Pool Data Mapping (Strict ID and Name mapping)
+const PRIZE_POOL_MAP = {
+  // ROBONIX
+  "EVT00016": "₹12,000", "Vice Velocity ( ROBO RACE )": "₹12,000", "Vice Velocity": "₹12,000",
+  "EVT00014": "₹10,000", "Chaos Cup ( ROBO SOCCER )": "₹10,000", "Chaos Cup": "₹10,000",
+  "EVT00017": "₹5,000",  "Track of the triads (LINE FOLLOWER ROBOT)": "₹5,000", "Track of triads": "₹5,000",
+  "EVT00018": "₹27,000", "Steel Heist ( ROBO WAR (8KG) )": "₹27,000", "Steel Heist": "₹27,000",
+  
+  // ELOQUENSE
+  "EVT00011": "₹4,500",  "Butterfly Effect San Andreas Tales": "₹4,500", "Butterfly Effect": "₹4,500",
+  "EVT00012": "₹4,500",  "NOT GUILTY GRIND": "₹4,500", "The Not Guilty Grind": "₹4,500",
+  "EVT00015": "₹8,000",  "Turf War: The Verbal Shootout": "₹8,000", "Turf War": "₹8,000",
+  "EVT00019": "₹6,500",  "Big Brain Heist": "₹6,500", "The Big Brain Heist (Quiz)": "₹6,500",
+  
+  // ILLUSTRO
+  "EVT00007": "₹7,000",  "Vice Visage": "₹7,000", "Vice Visage (Face Painting)": "₹7,000",
+  "EVT00008": "₹4,500",  "Vice City Reborn - Best out of Waste": "₹4,500", "Vice City Reborn": "₹4,500",
+  "EVT00009": "₹7,000",  "Tales from Vice City - Short Film Competition": "₹7,000", "Tales from Vice City": "₹7,000",
+  "EVT00020": "₹5,500",  "Click": "₹5,500", "Click (Photo Exhibition)": "₹5,500",
+  
+  // CYBERNIX
+  "EVT00010": "₹7,500",  "The UX Factor": "₹7,500",
+  "EVT00013": "₹23,000", "INNOVATRIX": "₹23,000", "Innovatrix (Hackathon)": "₹23,000",
+  
+  // VIRTUIX
+  "EVT00021": "₹7,500",  "E Football": "₹7,500",
+  
+  // FLAGSHIP (GENERAL)
+  "EVT00022": "₹11,000", "Sansad Syndicate": "₹11,000",
+  "EVT00023": "1.5k+ Goodies", "Golden Heist": "1.5k+ Goodies"
+};
+
 export default function Events() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -173,10 +205,10 @@ export default function Events() {
               className="p-4 rounded-xl bg-slate-800/50 border border-orange-500/20 hover:border-orange-500/60 transition"
             >
               <h3 className="text-[10px] sm:text-xs text-orange-300/80 uppercase font-semibold tracking-wide">
-                Registration
+                Prize Pool
               </h3>
               <p className="text-3xl sm:text-4xl md:text-5xl font-black text-orange-400 mt-2">
-                OPEN
+                2L+
               </p>
             </motion.div>
             <motion.div
@@ -244,10 +276,29 @@ export default function Events() {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.1 }}
-                      className="text-3xl sm:text-4xl md:text-5xl font-black text-orange-400 mb-4 uppercase leading-tight"
+                      className="text-2xl sm:text-4xl md:text-5xl font-black text-orange-400 mb-2 uppercase leading-tight line-clamp-2"
                     >
                       {events[currentEventIndex]?.name}
                     </motion.h3>
+
+                    {/* Prize Pool Display - Reveal on Hover */}
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.2 }}
+                      className="mb-6 inline-block group"
+                    >
+                      <div className="bg-gradient-to-r from-yellow-500 via-yellow-300 to-yellow-500 p-[2px] rounded-xl shadow-[0_0_20px_rgba(250,204,21,0.4)] group-hover:shadow-[0_0_30px_rgba(250,204,21,0.7)] transition-all duration-500">
+                        <div className="bg-black/90 backdrop-blur-xl px-6 py-2 rounded-[10px] flex items-center gap-3 relative overflow-hidden">
+                          <span className="text-xl sm:text-3xl group-hover:scale-110 transition-transform duration-500">🏆</span>
+                          <span className="text-sm sm:text-2xl md:text-3xl font-black text-yellow-400 tracking-tight md:tracking-tighter relative"
+                            style={{ textShadow: "0 0 10px rgba(250,204,21,0.5)" }}
+                          >
+                            {PRIZE_POOL_MAP[events[currentEventIndex]?.eventId] || PRIZE_POOL_MAP[events[currentEventIndex]?.name] ? `${PRIZE_POOL_MAP[events[currentEventIndex]?.eventId] || PRIZE_POOL_MAP[events[currentEventIndex]?.name]} PRIZE POOL` : "EXCITING REWARDS"}
+                          </span>
+                        </div>
+                      </div>
+                    </motion.div>
 
                     <motion.p
                       initial={{ opacity: 0, y: -10 }}

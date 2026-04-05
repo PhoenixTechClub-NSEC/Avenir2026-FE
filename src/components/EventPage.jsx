@@ -12,6 +12,38 @@ const EVENT_WING_MAP = {
   Flagship: ["EVT00013", "EVT00020", "EVT00022", "EVT00023"]
 };
 
+// Prize Pool Data Mapping (Strict ID and Name mapping)
+const PRIZE_POOL_MAP = {
+  // ROBONIX
+  "EVT00016": "₹12,000", "Vice Velocity ( ROBO RACE )": "₹12,000", "Vice Velocity": "₹12,000",
+  "EVT00014": "₹10,000", "Chaos Cup ( ROBO SOCCER )": "₹10,000", "Chaos Cup": "₹10,000",
+  "EVT00017": "₹5,000",  "Track of the triads (LINE FOLLOWER ROBOT)": "₹5,000", "Track of triads": "₹5,000",
+  "EVT00018": "₹27,000", "Steel Heist ( ROBO WAR (8KG) )": "₹27,000", "Steel Heist": "₹27,000",
+  
+  // ELOQUENSE
+  "EVT00011": "₹4,500",  "Butterfly Effect San Andreas Tales": "₹4,500", "Butterfly Effect": "₹4,500",
+  "EVT00012": "₹4,500",  "NOT GUILTY GRIND": "₹4,500", "The Not Guilty Grind": "₹4,500",
+  "EVT00015": "₹8,000",  "Turf War: The Verbal Shootout": "₹8,000", "Turf War": "₹8,000",
+  "EVT00019": "₹6,500",  "Big Brain Heist": "₹6,500", "The Big Brain Heist (Quiz)": "₹6,500",
+  
+  // ILLUSTRO
+  "EVT00007": "₹7,000",  "Vice Visage": "₹7,000", "Vice Visage (Face Painting)": "₹7,000",
+  "EVT00008": "₹4,500",  "Vice City Reborn - Best out of Waste": "₹4,500", "Vice City Reborn": "₹4,500",
+  "EVT00009": "₹7,000",  "Tales from Vice City - Short Film Competition": "₹7,000", "Tales from Vice City": "₹7,000",
+  "EVT00020": "₹5,500",  "Click": "₹5,500", "Click (Photo Exhibition)": "₹5,500",
+  
+  // CYBERNIX
+  "EVT00010": "₹7,500",  "The UX Factor": "₹7,500",
+  "EVT00013": "₹23,000", "INNOVATRIX": "₹23,000", "Innovatrix (Hackathon)": "₹23,000",
+  
+  // VIRTUIX
+  "EVT00021": "₹7,500",  "E Football": "₹7,500",
+  
+  // FLAGSHIP (GENERAL)
+  "EVT00022": "₹11,000", "Sansad Syndicate": "₹11,000",
+  "EVT00023": "1.5k+ Goodies", "Golden Heist": "1.5k+ Goodies"
+};
+
 const WINGS = ["All", ...Object.keys(EVENT_WING_MAP)];
 
 export default function EventPage() {
@@ -212,28 +244,54 @@ export default function EventPage() {
                     </div>
 
                     {/* Content */}
-                    <div className="p-6 space-y-2">
-                      <h3 className="text-2xl font-bold text-white mb-2 leading-tight">{event.name}</h3>
+                    <div className="p-6 pt-3 space-y-4">
+                      {/* Prize Pool Header Strip - Reveal on Hover */}
+                      <motion.div
+                        className="bg-gradient-to-r from-yellow-600/20 via-yellow-400/30 to-yellow-600/20 py-2.5 px-4 rounded-lg border-x-2 border-yellow-500/50 flex items-center justify-center gap-2 group-hover:bg-yellow-500/30 group-hover:scale-105 transition-all duration-500 overflow-hidden relative"
+                        style={{
+                          boxShadow: "0 0 15px rgba(250, 204, 21, 0.15)"
+                        }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="flex items-center gap-2"
+                            style={{
+                              textShadow: "0 0 12px rgba(250, 204, 21, 0.6)"
+                            }}
+                          >
+                            <span className="text-2xl sm:text-2xl group-hover:scale-110 transition-transform duration-500">🏆</span>
+                            <span className="text-sm sm:text-lg md:text-xl font-black text-yellow-400 tracking-tight sm:tracking-tighter relative"
+                              style={{ textShadow: "0 0 10px rgba(250,204,21,0.5)" }}
+                            >
+                              {PRIZE_POOL_MAP[event.eventId] || PRIZE_POOL_MAP[event.name] ? `${PRIZE_POOL_MAP[event.eventId] || PRIZE_POOL_MAP[event.name]} PRIZE POOL` : "EXCITING REWARDS"}
+                            </span>
+                          </span>
+                        </div>
+
+                        {/* Animated shimmer overlay on hover */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+                      </motion.div>
+
+                      <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white leading-tight uppercase group-hover:text-orange-400 transition-colors line-clamp-2">
+                        {event.name}
+                      </h3>
 
                       {/* Date and Fee boxes */}
-                      <div>
+                      <div className="flex flex-col gap-1">
                         {/* Date box */}
-                        <motion.div
-                          className="rounded-xl p-2"
-                        >
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-orange-500 uppercase tracking-widest">Date:</span>
                           <p className="text-sm font-bold text-orange-100">
                             {event.date || "TBA"}
                           </p>
-                        </motion.div>
+                        </div>
 
                         {/* Fee box */}
-                        <motion.div
-                          className="rounded-xl p-2 "
-                        >
-                          <p className="text-xl font-black text-orange-400" style={{ textShadow: "2px 2px 8px rgba(255,165,0,0.6)" }}>
-                            Registration Fee: ₹{event.registrationFee !== undefined ? event.registrationFee : "0"}
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-orange-500 uppercase tracking-widest">Entry Fee:</span>
+                          <p className="text-lg font-black text-orange-400" style={{ textShadow: "2px 2px 8px rgba(255,165,0,0.4)" }}>
+                            ₹{event.registrationFee !== undefined ? event.registrationFee : "0"}
                           </p>
-                        </motion.div>
+                        </div>
                       </div>
 
                       {/* Description with inline Read More button */}

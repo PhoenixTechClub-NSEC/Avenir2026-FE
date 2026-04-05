@@ -84,41 +84,41 @@ export default function About() {
         >
           About Avenir
         </motion.h2>
-        
-          {/* Decorative divider (DRAW-ON-SCROLL) */}
-          <div className="flex items-center justify-center gap-2 sm:gap-4 mt-6">
-            
-            {/* LEFT LINE */}
-            <motion.div
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.9, ease: "easeOut" }}
-              style={{ transformOrigin: "100% 50%" }} // draw from center → left
-              className="h-1 w-16 sm:w-32 bg-gradient-to-r from-transparent via-yellow-500 to-yellow-500"
-            />
 
-            {/* DIAMOND */}
-            <motion.div
-              initial={{ scale: 0, rotate: 45 }}
-              whileInView={{ scale: 1, rotate: 45 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.4, ease: "backOut" }}
-              className="w-3 h-3 sm:w-4 sm:h-4 bg-orange-500"
-            />
+        {/* Decorative divider (DRAW-ON-SCROLL) */}
+        <div className="flex items-center justify-center gap-2 sm:gap-4 mt-6">
 
-            {/* RIGHT LINE */}
-            <motion.div
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.9, ease: "easeOut" }}
-              style={{ transformOrigin: "0% 50%" }} // draw from center → right
-              className="h-1 w-16 sm:w-32 bg-gradient-to-l from-transparent via-yellow-500 to-yellow-500"
-            />
-          </div>
+          {/* LEFT LINE */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.9, ease: "easeOut" }}
+            style={{ transformOrigin: "100% 50%" }} // draw from center → left
+            className="h-1 w-16 sm:w-32 bg-gradient-to-r from-transparent via-yellow-500 to-yellow-500"
+          />
 
-        
+          {/* DIAMOND */}
+          <motion.div
+            initial={{ scale: 0, rotate: 45 }}
+            whileInView={{ scale: 1, rotate: 45 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.4, ease: "backOut" }}
+            className="w-3 h-3 sm:w-4 sm:h-4 bg-orange-500"
+          />
+
+          {/* RIGHT LINE */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.9, ease: "easeOut" }}
+            style={{ transformOrigin: "0% 50%" }} // draw from center → right
+            className="h-1 w-16 sm:w-32 bg-gradient-to-l from-transparent via-yellow-500 to-yellow-500"
+          />
+        </div>
+
+
         <p className="font-bold text-gray-300 max-w-2xl mx-auto mt-6 text-base sm:text-lg px-4">
           The campus awaits the extravaganza fueled by NSEC's premier techno-management festival, and the energetic team that makes it euphoric.
         </p>
@@ -139,7 +139,7 @@ export default function About() {
             textShadow: "2px 2px 0px #000, 4px 4px 0px rgba(255,140,0,0.7)",
             letterSpacing: "0.05em"
           }}>
-           THE TECHNO–STREETS WON'T FORGET !!! 
+            THE TECHNO–STREETS WON'T FORGET !!!
 
           </h3>
 
